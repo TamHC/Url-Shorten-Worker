@@ -2,7 +2,7 @@ const config = {
   result_page: false, // After get the value from KV, if use a page to show the result.
   theme: "", // Homepage theme, use the empty value for default theme. To use urlcool theme, please fill with "theme/urlcool" .
   cors: true, // Allow Cross-origin resource sharing for API requests.
-  unique_link: false, // If it is true, the same long url will be shorten into the same short url
+  unique_link: true, // If it is true, the same long url will be shorten into the same short url
   custom_link: true, // Allow users to customize the short url.
   overwrite_kv: false, // Allow user to overwrite an existed key.
   snapchat_mode: false, // The link will be distroyed after access.
@@ -16,7 +16,7 @@ const protect_keylist = [
   "password",
 ]
 
-let index_html = "https://crazypeace.github.io/Url-Shorten-Worker/" + config.theme + "/index.html"
+let index_html = "https://horsemail.github.io/Url-Shorten-Worker/" + config.theme + "/index.html"
 let result_html = "https://crazypeace.github.io/Url-Shorten-Worker/" + config.theme + "/result.html"
 
 const html404 = `<!DOCTYPE html>
