@@ -2,30 +2,43 @@
 <html>
 
 <head>
-	<title>Url-Shorten-Worker</title>
+    <title>Url-Shorten-Worker</title>
 </head>
 
 <body>
-	<div id="html-preview"></div>
+    <div id="html-preview"></div>
 
-<textarea id="longURL" readonly hidden>
+    <textarea id="longURL" readonly hidden>
 {__FINAL_LINK__}
-</textarea>
+    </textarea>
 
-	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-	<script>
-		// 把MarkDown文字轉換為顯示
-		function syncMarkDownView() {
-			const markdownContent = document.getElementById('longURL').value;
-			const htmlPreview = document.getElementById('html-preview');
-			htmlPreview.innerHTML = marked.parse(markdownContent);
-		}
+    <script>
+        // 設定正確的密碼
+        const correctPassword = "your_password"; // 將這裡的 "your_password" 改為你想要的密碼
 
-		document.addEventListener('DOMContentLoaded', function () {
-			syncMarkDownView();
-		});
-	</script>
+        // 要求用戶輸入密碼
+        function askForPassword() {
+            const userPassword = prompt("請輸入密碼：");
+            if (userPassword === correctPassword) {
+                syncMarkDownView(); // 如果密碼正確，則顯示內容
+            } else {
+                alert("密碼錯誤，無法顯示內容。");
+            }
+        }
+
+        // 把Markdown文字轉換為顯示
+        function syncMarkDownView() {
+            const markdownContent = document.getElementById('longURL').value;
+            const htmlPreview = document.getElementById('html-preview');
+            htmlPreview.innerHTML = marked.parse(markdownContent);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            askForPassword(); // 網頁加載後要求輸入密碼
+        });
+    </script>
 
 </body>
 
