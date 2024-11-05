@@ -30,6 +30,9 @@
       right: 20px;
       z-index: 1100;
     }
+    .card {
+      height: 100%;
+    }
     @media (max-width: 768px) {
       #sidebar {
         width: 100vw;
@@ -46,7 +49,6 @@
   <button id="toggleSidebarBtn" class="btn btn-primary">側邊欄</button>
 
   <div id="sidebar">
-    <!-- View Markdown 預覽卡片 -->
     <div class="card mb-3 shadow-sm">
       <h5 class="card-header bg-success text-white">View Markdown</h5>
       <div class="card-body">
@@ -54,7 +56,6 @@
       </div>
     </div>
 
-    <!-- LocalStorage List 卡片 -->
     <div class="card mb-3 shadow-sm">
       <h5 class="card-header bg-warning text-dark">LocalStorage List</h5>
       <div class="card-body">
@@ -67,13 +68,10 @@
       </div>
     </div>
 
-    <!-- 使用說明 (Iframe) 卡片 -->
     <div class="card mb-3 shadow-sm">
       <h5 class="card-header bg-secondary text-white">如何使用</h5>
-      <div class="card-body">
-        <div class="ratio ratio-16x9">
-          <iframe src="https://www.youtube.com/embed/Ra6SXZFeGM8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> 
-        </div>
+      <div class="card-body text-center">
+        <a href="https://www.youtube.com/watch?v=Ra6SXZFeGM8" target="_blank" class="btn btn-secondary w-100">觀看使用教學</a>
       </div>
     </div>
   </div>
@@ -83,7 +81,7 @@
     <div class="row gy-3">
 
       <div class="col-12 col-md-6 col-lg-4">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm h-100">
           <h5 class="card-header bg-info text-white">Load 1 KV</h5>
           <div class="card-body">
             <label for="keyForQuery" class="form-label">Key</label>
@@ -96,7 +94,7 @@
       </div>
 
       <div class="col-12 col-md-6 col-lg-4">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm h-100">
           <h5 class="card-header bg-primary text-white">Net Journal</h5>
           <div class="card-body">
             <label for="longURL" class="form-label">記事本內容 Value</label>
