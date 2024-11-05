@@ -1,128 +1,124 @@
 <!doctype html>
-<html>
+<html lang="zh-Hant">
 <head>
-  <meta http-equiv="content-type" content="txt/html; charset=utf-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <title>Net Journal</title>
   <link rel="stylesheet" href="https://crazypeace.github.io/Url-Shorten-Worker/styles.css">
-  <!-- 如果使用CDN資源就放開這一句, 把上面那一句註解掉
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/crazypeace/Url-Shorten-Worker/styles.css">
-  -->
+  <style>
+    #sidebar {
+      width: 80vw;
+      max-width: 500px;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      right: -80vw;
+      background-color: #f8f9fa;
+      box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+      transition: right 0.4s ease;
+      overflow-y: auto;
+      z-index: 1050;
+      padding: 1rem;
+    }
+    #sidebar.active {
+      right: 0;
+    }
+    #toggleSidebarBtn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1100;
+    }
+    @media (max-width: 768px) {
+      #sidebar {
+        width: 100vw;
+        right: -100vw;
+      }
+      #sidebar.active {
+        right: 0;
+      }
+    }
+  </style>
 </head>
-<body>
-  <div class="d-flex align-items-start flex-wrap">
+<body class="bg-light">
 
-    <div class="card shadow m-3">
-      <h5 class="card-header">Load 1 KV</h5>
+  <button id="toggleSidebarBtn" class="btn btn-primary">側邊欄</button>
+
+  <div id="sidebar">
+    <!-- View Markdown 預覽卡片 -->
+    <div class="card mb-3 shadow-sm">
+      <h5 class="card-header bg-success text-white">View Markdown</h5>
       <div class="card-body">
-        <h5 class="card-title"> </h5>  
-        <div class="input-group mb-3">
-          <label>Key</label>
-          <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Input 1 key" id="keyForQuery">
-            <button class="btn btn-info" type="button" onclick='query1KV()' id="qryBtn">Load</button>
-          </div>
-        </div>  
+        <div class="form-control" id="html-preview">預覽內容將顯示於此</div>
       </div>
     </div>
 
-    <div class="card shadow m-3">
-      <h5 class="card-header">短鏈系統變身日記本NetJournal</h5>
+    <!-- LocalStorage List 卡片 -->
+    <div class="card mb-3 shadow-sm">
+      <h5 class="card-header bg-warning text-dark">LocalStorage List</h5>
       <div class="card-body">
-        <h5 class="card-title"> </h5>
-
-        <div class="input-group mb-3">
-          <label>記事本內容 Value</label>
-          <form class="input-group mb-3">
-            <textarea class="form-control" id="longURL" placeholder="輸入文字 Input MarkDown" oninput="loadUrlList()"></textarea>
-          </form>
+        <div class="d-flex flex-wrap gap-2 mb-3">
+          <button class="btn btn-success flex-fill" type="button" onclick='loadUrlList()' id="loadListBtn">載入 localStorage</button>
+          <button class="btn btn-danger flex-fill" type="button" onclick='clearLocalStorage()' id="clearlocalStgBtn">清除 localStorage</button>
+          <button class="btn btn-info flex-fill" type="button" onclick='loadKV()' id="loadKV2localStgBtn">載入 KV 到 localStorage</button>
         </div>
-
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon2">記事本密碼 Key</span>
-          <input type="text" class="form-control" id="keyPhrase" aria-describedby="basic-addon2" placeholder="">
-        </div>
-
-        <div class="input-group mb-3">
-          <button class="btn btn-primary" type="button" onclick='shorturl()' id="addBtn">保存 Save</button>
-        </div>
-
-        <div class="input-group mb-3">
-          <span class="input-group-text" id="basic-addon3">本系統密碼 Password</span>
-          <input class="form-control" type="text" value="__PASSWORD__" readonly="true" id="passwordText" aria-describedby="basic-addon3">
-        </div>
-
-      </div>
-      
-      <div class="card-footer">
-        <span> <a href="https://github.com/crazypeace/Url-Shorten-Worker/" target="_self">Fork me on GitHub</a> </span>
+        <div id="urlList" class="list-group"></div>
       </div>
     </div>
 
-    <div class="card shadow m-3">
-      <h5 class="card-header">View MarkDown</h5>
+    <!-- 使用說明 (Iframe) 卡片 -->
+    <div class="card mb-3 shadow-sm">
+      <h5 class="card-header bg-secondary text-white">如何使用</h5>
       <div class="card-body">
-        <h5 class="card-title"> </h5>
-        <div class="form-control" id="html-preview"></div>
+        <div class="ratio ratio-16x9">
+          <iframe src="https://www.youtube.com/embed/Ra6SXZFeGM8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> 
+        </div>
       </div>
     </div>
+  </div>
 
-    <div class="card shadow m-3">
-      <h5 class="card-header">LocalStorage List</h5>
-      <div class="card-body">
-        <h5 class="card-title"> </h5>
-        <div class="input-group mb-3">
-          <button class="btn btn-success" type="button" onclick='loadUrlList()' id="loadListBtn">load localStorage</button>
-          <button class="btn btn-danger" type="button" onclick='clearLocalStorage()' id="clearlocalStgBtn">clear localStorage</button>
-          <button class="btn btn-info" type="button" onclick='loadKV()' id="loadKV2localStgBtn">load KV to localStorage</button>
-        </div>
+  <div class="container my-5">
+    <h1 class="text-center mb-4">短鏈系統變身日記本 <em>Net Journal</em></h1>
+    <div class="row gy-3">
 
-        <div class="card-text">
-          <div classs="list-group" id="urlList">
-            <div class="mb-3 list-group-item">
-              <div class="input-group">
-                <button type="button" class="btn btn-danger" onclick='deleteShortUrl("4sure")' id="delBtn-4sure">X</button>
-                <button type="button" class="btn btn-info" onclick='queryVisitCount("4sure")' id="qryCntBtn-4sure">?</button>
-                <span class="form-control">https://1way.eu.org/4sure</span>
-              </div>
-              <div class="form-control">
-                https://en.y2mate.is/s36/youtube-to-mp3.html
-              </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card shadow-sm">
+          <h5 class="card-header bg-info text-white">Load 1 KV</h5>
+          <div class="card-body">
+            <label for="keyForQuery" class="form-label">Key</label>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Input 1 key" id="keyForQuery">
+              <button class="btn btn-info" type="button" onclick='query1KV()' id="qryBtn">Load</button>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-  </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card shadow-sm">
+          <h5 class="card-header bg-primary text-white">Net Journal</h5>
+          <div class="card-body">
+            <label for="longURL" class="form-label">記事本內容 Value</label>
+            <textarea class="form-control mb-3" id="longURL" placeholder="輸入文字 (Markdown 格式)" rows="4" oninput="syncMarkDownView()"></textarea>
 
-  <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="resultModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="resultModalLabel">Result</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body" id="result">No result</div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" onclick='copyurl("result")' data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Copied!">Copy</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <label for="keyPhrase" class="form-label">記事本密碼 Key</label>
+            <input type="text" class="form-control mb-3" id="keyPhrase" placeholder="輸入密碼">
+
+            <button class="btn btn-primary w-100" type="button" onclick='shorturl()' id="addBtn">保存 Save</button>
+            
+            <div class="mt-3">
+              <label for="passwordText" class="form-label">本系統密碼 Password</label>
+              <input class="form-control" type="text" value="__PASSWORD__" readonly id="passwordText">
+            </div>
+          </div>
+          <div class="card-footer text-center">
+            <a href="https://github.com/crazypeace/Url-Shorten-Worker/" target="_blank">Fork me on GitHub</a>
+          </div>
         </div>
       </div>
+
     </div>
-  </div>
-
-  <div class="card shadow m-3">
-    <h5 class="card-header">How to use</h5>
-    <div class="card-body">
-      <h5 class="card-title"> </h5>
-
-      <div class="input-group mb-3"> 
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/Ra6SXZFeGM8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe> 
-       </div> 
-
-    </div>      
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
@@ -130,27 +126,36 @@
   <script src="https://cdn.jsdelivr.net/gh/lrsjng/jquery-qrcode@0.18.0/dist/jquery-qrcode.min.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://crazypeace.github.io/Url-Shorten-Worker/main.js" crossorigin="anonymous"></script>
-  <!-- 如果使用CDN資源就放開這一句, 把上面那一句註解掉
-    <script src="https://cdn.jsdelivr.net/gh/crazypeace/Url-Shorten-Worker/main.js" crossorigin="anonymous"></script>
-  -->
+
   <script>
-    // 把MarkDown文本轉換為顯示
+    const sidebar = document.getElementById('sidebar');
+    document.getElementById('toggleSidebarBtn').addEventListener('click', function() {
+      sidebar.classList.toggle('active');
+    });
+
     function syncMarkDownView() {
       const markdownContent = document.getElementById('longURL').value;
       const htmlPreview = document.getElementById('html-preview');
       htmlPreview.innerHTML = marked.parse(markdownContent);
     }
-    document.getElementById('longURL').addEventListener('input', syncMarkDownView);
-    
-    function buildValueMarkdown(longUrl) {
-      let valueMarkdown = document.createElement('div')
-      valueMarkdown.classList.add("form-control", "rounded-top-0")  
-      valueMarkdown.innerHTML = marked.parse(longUrl)
-      return valueMarkdown
-    }
 
-    // 函數變數的定義與使用請見main.js
-    buildValueItemFunc = buildValueMarkdown
+    function loadUrlList() {
+      const urlList = document.getElementById('urlList');
+      urlList.innerHTML = ''; 
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'list-group-item';
+        itemDiv.innerHTML = `
+          <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn btn-danger btn-sm" onclick='deleteShortUrl("${key}")'>X</button>
+            <button type="button" class="btn btn-info btn-sm" onclick='queryVisitCount("${key}")'>?</button>
+            <span class="form-control bg-light">${key}</span>
+          </div>
+        `;
+        urlList.appendChild(itemDiv);
+      }
+    }
   </script>
 </body>
 </html>
